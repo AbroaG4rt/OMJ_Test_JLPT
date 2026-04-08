@@ -61,17 +61,16 @@
             <button id="emailFormToggleBtn" class="btn btn-primary">📧 Send to Email</button>
         </div>
 
-        <!-- Email Submit Form Container -->
+        <!-- Email Submit API Container -->
         <div id="emailFormContainer" class="card hidden mb-2" style="max-width: 500px; margin: 0 auto 2rem;">
-            <h3>Send Results via Email</h3>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">This will trigger a Cloudflare Worker to process your results.</p>
-            <form id="emailSubmitForm" action="/api/send" method="POST">
-                <input type="hidden" name="payloadData" id="payloadData">
+            <h3>Submit Results via Worker API</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">This triggers an HTTP POST request to the Cloudflare Worker.</p>
+            <form id="emailSubmitForm">
                 <div class="form-group">
-                    <label class="form-label" for="targetEmail">Verification Email</label>
-                    <input type="email" id="targetEmail" name="targetEmail" class="form-control" value="ofc.omj.japan@gmail.com" readonly>
+                    <label class="form-label" for="targetEmail">Verification Email Address</label>
+                    <input type="email" id="targetEmail" class="form-control" value="ofc.omj.japan@gmail.com" readonly>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit to Organization</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Execute API Call</button>
             </form>
         </div>
 
