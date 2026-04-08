@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const userAns = answers[q.id];
             const isCorrect = userAns === q.correctAnswer;
             if (isCorrect) correctCount++;
-            
+
             evaluation.push({
                 id: q.id,
                 question: q.question,
@@ -54,12 +54,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 cBadge.className = "badge badge-fail";
             } else if (cheatProfile.score >= 3) {
                 cBadge.textContent = "Suspicious";
-                cBadge.className = "badge badge-master"; 
+                cBadge.className = "badge badge-master";
             } else {
                 cBadge.textContent = "Safe";
                 cBadge.className = "badge badge-pass";
             }
-            
+
             document.getElementById('cheatStatsList').innerHTML = `
                 <li style="margin-bottom: 0.5rem;">Tab Switches: <strong>${cheatProfile.tabSwitches}</strong></li>
                 <li style="margin-bottom: 0.5rem;">Copy Attempts: <strong>${cheatProfile.copyAttempts}</strong></li>
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let badgeText = "Don't Give Up";
         if (score >= 80) { badgeClass = 'badge-master'; badgeText = "JLPT Master"; }
         else if (score >= 50) { badgeClass = 'badge-pass'; badgeText = "Keep Going"; }
-        
+
         badgeDisplay.className = `badge ${badgeClass} mt-1`;
         badgeDisplay.textContent = badgeText;
 
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('downloadPdfBtn').addEventListener('click', () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            
+
             const pageWidth = doc.internal.pageSize.getWidth();
             const pageHeight = doc.internal.pageSize.getHeight();
 
@@ -129,18 +129,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             // USER INFO 
             doc.setFontSize(12);
             doc.text(`Examinee Name: ${user.name}`, 15, 45);
-            doc.text(`Password Key: ${user.password || 'N/A'}`, 15, 52); 
+            doc.text(`Password Key: ${user.password || 'N/A'}`, 15, 52);
             doc.text(`Test Level: JLPT ${level}`, 15, 59);
             doc.text(`Date completed: ${new Date(timestamp).toLocaleString()}`, 15, 66);
 
             // SCORE INFO
             doc.setFontSize(14);
             doc.text("Performance Summary:", 15, 80);
-            
+
             doc.setFontSize(20);
             doc.setTextColor(0, 0, 0);
             doc.text(`Final Score: ${score.toFixed(1)}%`, 15, 90);
-            
+
             doc.setFontSize(12);
             doc.text(`Correct Answers: ${correctCount} / ${totalCount}`, 15, 98);
             doc.text(`Evaluation Badge: ${badgeText}`, 15, 105);
@@ -149,10 +149,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             doc.setFontSize(14);
             doc.setTextColor(209, 48, 48);
             doc.text("Answer Key Review (Preview):", 15, 120);
-            
+
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            
+
             let yPos = 130;
             let pagedQuestions = evaluation.slice(0, 40);
 
@@ -170,18 +170,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             doc.saveGraphicsState();
             doc.setGState(new doc.GState({ opacity: 0.15 }));
             doc.setFontSize(50);
-            doc.setTextColor(200, 200, 200); 
-            doc.text("test omoshiroi japan", pageWidth/2, pageHeight/2, { angle: 45, align: "center" });
+            doc.setTextColor(200, 200, 200);
+            doc.text("test omoshiroi japan", pageWidth / 2, pageHeight / 2, { angle: 45, align: "center" });
             doc.restoreGraphicsState();
 
-            doc.save(`OMOSHIROI_JLPT_${level}_${user.name.replace(/\s+/g,'_')}.pdf`);
+            doc.save(`OMOSHIROI_JLPT_${level}_${user.name.replace(/\s+/g, '_')}.pdf`);
         });
 
         // --- HTTP POST API LOGIC ---
         const emailFormToggleBtn = document.getElementById('emailFormToggleBtn');
         const emailFormContainer = document.getElementById('emailFormContainer');
         const emailSubmitForm = document.getElementById('emailSubmitForm');
-        
+
         emailFormToggleBtn.addEventListener('click', () => {
             emailFormContainer.classList.toggle('hidden');
         });
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Direct Fetch / AJAX POST handler
         emailSubmitForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const submitBtn = emailSubmitForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = "Sending...";
@@ -212,9 +212,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 const jsonResult = await workerResponse.json();
-                
+
                 if (!workerResponse.ok) throw new Error(jsonResult.error || "Unknown Error");
-                
+
                 alert(`✅ Successfully submitted report to Organization!\n\nMessage: ${jsonResult.message}`);
                 emailFormContainer.classList.add('hidden');
             } catch (err) {
@@ -237,8 +237,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 new QRCode(document.getElementById("qrcode"), {
                     text: shareUrl,
                     width: 150, height: 150,
-                    colorDark : "#2c2c2c", colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.H
+                    colorDark: "#2c2c2c", colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
                 });
                 qrGenerated = true;
             }
@@ -256,11 +256,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const whatsappBtn = document.getElementById('whatsappFloat');
         if (whatsappBtn) {
-            const phoneNo = "819012345678";
+            const phoneNo = "+62881036289081";
             const waText = encodeURIComponent(`Hello Omoshiroi Japan, I have just completed the JLPT ${level} examination.\n\nMy Score: ${score.toFixed(1)}%\nName: ${user.name}`);
             whatsappBtn.href = `https://wa.me/${phoneNo}?text=${waText}`;
         }
-        
+
     } catch (e) {
         console.error("Failed to load result layout properly:", e);
         alert("Failed to render results properly. Please ensure test data exists.");
