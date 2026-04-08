@@ -184,27 +184,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Disable lockdown warning so we can redirect gracefully
         window.onbeforeunload = null;
 
-        // Calculate raw correctness client side to save to result payload
-        let correctCount = 0;
-        let evaluation = [];
-
-        // Save evaluated result for result page
-        allQuestions.forEach(q => {
-            const userAns = testState.answers[q.id];
-            const isCorrect = userAns === q.correctAnswer;
-            if (isCorrect) correctCount++;
-            
-            evaluation.push({
-                id: q.id,
-                question: q.question,
-                userAns: userAns || null,
-                correctAnswer: q.correctAnswer,
-                isCorrect: isCorrect
-            });
-        });
-
-        const score = (correctCount / allQuestions.length) * 100;
-        
         // Hook anti cheat
         const cheatData = window.AntiCheat ? window.AntiCheat.getProfile() : { tabSwitches: 0, copyAttempts: 0, screenshotAttempts: 0, devToolsAttempts: 0 };
         
@@ -212,12 +191,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cheatScore = (cheatData.tabSwitches * 2) + (cheatData.copyAttempts * 1) + (cheatData.screenshotAttempts * 2) + (cheatData.devToolsAttempts * 3);
         cheatData.score = cheatScore;
 
+        // Delegate scoring evaluation to result.js
         const finalResult = {
             level: level,
-            score: score,
-            correctCount: correctCount,
-            totalCount: allQuestions.length,
-            evaluation: evaluation,
+            answers: testState.answers,
             cheatProfile: cheatData,
             timestamp: new Date().getTime()
         };
@@ -225,15 +202,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Cache for Result Page
         localStorage.setItem('omoshiroi_latest_result', JSON.stringify(finalResult));
         
-        // Add to history
-        let history = JSON.parse(localStorage.getItem('omoshiroi_history') || '[]');
-        history.push({
-            level: level,
-            score: score,
-            timestamp: finalResult.timestamp
-        });
-        localStorage.setItem('omoshiroi_history', JSON.stringify(history));
-
         // Clear active test state securely
         localStorage.removeItem('omoshiroi_active_test');
         localStorage.removeItem('omoshiroi_cheatData');
