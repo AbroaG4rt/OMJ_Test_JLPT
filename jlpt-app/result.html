@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results - OMOSHIROI JAPAN</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,7 +16,7 @@
 <body>
     <header>
         <div class="container flex items-center justify-between" style="padding: 0.5rem 1.5rem;">
-            <a href="dashboard.html" class="brand">🌸 OMOSHIROI</a>
+            <a href="dashboard.html" class="brand"><img src="assets/images/logo.png" alt="Logo" style="height: 30px; margin-right: 0.5rem;"> OMOSHIROI</a>
             <nav class="nav-links">
                 <a href="dashboard.html">Return to Dashboard</a>
             </nav>
@@ -24,7 +25,7 @@
 
     <main class="container">
         <div class="text-center mb-2">
-            <h1>Examination Results (<span id="levelDisplay">N5</span>)</h1>
+            <h1><span data-i18n="result_title">Examination Results</span> (<span id="levelDisplay">N5</span>)</h1>
             <div id="badgeDisplay" class="badge mt-1" style="font-size: 1rem; padding: 0.5rem 1rem;">Testing</div>
             <p id="motivationalQuote" class="mt-1" style="font-style: italic; color: var(--text-secondary);"></p>
         </div>
@@ -56,8 +57,8 @@
 
         <!-- Action Buttons -->
         <div class="flex justify-center flex-wrap" style="gap: 1rem; margin-bottom: 2rem;">
-            <button id="downloadPdfBtn" class="btn btn-outline">📥 Download PDF Report</button>
-            <button id="shareTestBtn" class="btn btn-outline">📷 Share Test (QR)</button>
+            <button id="downloadPdfBtn" class="btn btn-outline" data-i18n="download_pdf">📥 Download PDF Report</button>
+            <button id="shareTestBtn" class="btn btn-outline" data-i18n="share_test">📷 Share Test (QR)</button>
             <button id="emailFormToggleBtn" class="btn btn-primary">📧 Send to Email</button>
         </div>
 
@@ -92,5 +93,6 @@
 
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/result.js"></script>
+    <script src="assets/js/i18n.js"></script>
 </body>
 </html>
