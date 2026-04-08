@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMOSHIROI JAPAN - JLPT Simulation Platform</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         .hero {
             text-align: center;
@@ -79,6 +81,12 @@
             </div>
         </section>
         
+        <div class="text-center" style="margin-top: 4rem; padding: 2rem; background: var(--sakura-accent); border-radius: var(--radius);">
+            <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📱 Take it on your phone</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Scan this code with your mobile device to seamlessly access the platform wherever it is deployed.</p>
+            <div id="indexQrCode" style="display: flex; justify-content: center;"></div>
+        </div>
+
         <div class="text-center" style="margin-top: 4rem; color: var(--text-secondary); font-size: 0.85rem;">
             © 2026 Omoshiroi Japan Testing Platform. Crafted with plain web standards.
         </div>
@@ -90,7 +98,18 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (OmoshiroiUtils.getUser()) {
                 window.location.href = 'dashboard.html';
+                return;
             }
+
+            // Generate contextual QR code pointing to this exact landing page url
+            new QRCode(document.getElementById("indexQrCode"), {
+                text: window.location.href,
+                width: 180,
+                height: 180,
+                colorDark : "#d13030", // Primary color deep red
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
         });
     </script>
 </body>
