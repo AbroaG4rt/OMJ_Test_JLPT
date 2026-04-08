@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Satoshi Nakamoto",
+    "password": "pwd123"
+  },
+  {
+    "name": "Test User",
+    "password": "123"
+  }
+]

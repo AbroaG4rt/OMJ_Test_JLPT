@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - OMOSHIROI JAPAN</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF automatically included by CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container flex items-center justify-between" style="padding: 0.5rem 1.5rem;">
+            <a href="dashboard.html" class="brand">🌸 OMOSHIROI</a>
+            <nav class="nav-links">
+                <a href="dashboard.html">Return to Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="text-center mb-2">
+            <h1>Examination Results (<span id="levelDisplay">N5</span>)</h1>
+            <div id="badgeDisplay" class="badge mt-1" style="font-size: 1rem; padding: 0.5rem 1rem;">Testing</div>
+            <p id="motivationalQuote" class="mt-1" style="font-style: italic; color: var(--text-secondary);"></p>
+        </div>
+
+        <div class="flex flex-col items-center mb-2">
+            <div class="card" style="width: 100%; max-width: 500px; margin-bottom: 2rem;">
+                <div class="text-center mb-1">
+                    <h2 id="scoreDisplay" style="font-size: 3rem; color: var(--primary-color);">0%</h2>
+                    <p id="fractionDisplay">0 / 0 Correct</p>
+                </div>
+                <!-- Chart Container -->
+                <div style="position: relative; height: 250px; width: 100%;">
+                    <canvas id="resultChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Security & Anti-Cheat Summary -->
+            <div class="card" style="width: 100%; max-width: 500px; border-left: 4px solid var(--danger-color);">
+                <h3 style="margin-bottom: 1rem;">Security & Behavioral Report</h3>
+                <div class="flex justify-between items-center mb-1">
+                    <span style="font-weight: 500;">Cheating Risk Score:</span>
+                    <span id="cheatScoreBadge" class="badge">Evaluating...</span>
+                </div>
+                <ul id="cheatStatsList" style="list-style: none; font-size: 0.9rem; color: var(--text-secondary);">
+                    <!-- Built from JS -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center flex-wrap" style="gap: 1rem; margin-bottom: 2rem;">
+            <button id="downloadPdfBtn" class="btn btn-outline">📥 Download PDF Report</button>
+            <button id="shareTestBtn" class="btn btn-outline">📷 Share Test (QR)</button>
+            <button id="emailFormToggleBtn" class="btn btn-primary">📧 Send to Email</button>
+        </div>
+
+        <!-- Email Submit Form Container -->
+        <div id="emailFormContainer" class="card hidden mb-2" style="max-width: 500px; margin: 0 auto 2rem;">
+            <h3>Send Results via Email</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">This will trigger a Cloudflare Worker to process your results.</p>
+            <form id="emailSubmitForm" action="/api/send" method="POST">
+                <input type="hidden" name="payloadData" id="payloadData">
+                <div class="form-group">
+                    <label class="form-label" for="targetEmail">Verification Email</label>
+                    <input type="email" id="targetEmail" name="targetEmail" class="form-control" value="ofc.omj.japan@gmail.com" readonly>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit to Organization</button>
+            </form>
+        </div>
+
+        <!-- QR Code Container -->
+        <div id="qrContainerWrapper" class="card hidden text-center mb-2" style="max-width: 350px; margin: 0 auto;">
+            <h3>Share this test</h3>
+            <div id="qrcode" style="margin: 1.5rem auto; display: flex; justify-content: center;"></div>
+            <button id="downloadQrBtn" class="btn btn-outline" style="font-size: 0.85rem;">Download QR Image</button>
+        </div>
+
+    </main>
+
+    <!-- WhatsApp Floating Action Button -->
+    <a href="#" id="whatsappFloat" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+        </svg>
+    </a>
+
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/result.js"></script>
+</body>
+</html>

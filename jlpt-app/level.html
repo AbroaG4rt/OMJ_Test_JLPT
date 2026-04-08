@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Info - OMOSHIROI JAPAN</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container flex items-center justify-between">
+            <a href="dashboard.html" class="brand">🌸 OMOSHIROI</a>
+            <nav class="nav-links">
+                <a href="dashboard.html">Cancel</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container text-center" style="max-width: 600px;">
+        <div class="card mt-2">
+            <h1 id="levelTitle">Loading...</h1>
+            <p id="levelDesc" class="mb-2" style="color: var(--text-secondary);"></p>
+
+            <div
+                style="background: var(--sakura-accent); padding: 1.5rem; border-radius: var(--radius); text-align: left; margin-bottom: 2rem;">
+                <h3 style="color: var(--danger-color); margin-bottom: 0.5rem;">⚠️ Examination Rules</h3>
+                <ul style="margin-left: 1.5rem; color: var(--text-primary); font-size: 0.95rem;">
+                    <li>Waktu akan berjalan ketika kamu klik mulai test.</li>
+                    <li>Waktu akan terus berjalan meskipun kamu mencoba refresh test.</li>
+                    <li>Kamu harus menyelesaikan semua test sebelum waktu habis.</li>
+                    <li>Once submitted, you cannot edit your answers.</li>
+                </ul>
+            </div>
+
+            <button id="startTestBtn" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 3rem;">START
+                EXAMINATION</button>
+        </div>
+    </main>
+
+    <script src="assets/js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!OmoshiroiUtils.requireAuth()) return;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const level = urlParams.get('level') || 'N5';
+
+            const levelInfo = {
+                "N5": "95 Questions • 120 Minutes",
+                "N4": "100 Questions • 125 Minutes",
+                "N3": "130 Questions • 130 Minutes",
+                "N2": "135 Questions • 140 Minutes",
+                "N1": "140 Questions • 150 Minutes"
+            };
+
+            const minutes = parseInt(levelInfo[level].split('•')[1].trim().split(' ')[0]);
+
+            document.getElementById('levelTitle').textContent = `JLPT ${level}`;
+            document.getElementById('levelDesc').textContent = levelInfo[level];
+
+            document.getElementById('startTestBtn').addEventListener('click', () => {
+                // Initialize Test Session
+                const testState = {
+                    level: level,
+                    durationMinutes: minutes,
+                    answers: {}, // QuestionID -> Option selected
+                    startTime: new Date().getTime(),
+                    endTime: new Date().getTime() + (minutes * 60 * 1000)
+                };
+                localStorage.setItem('omoshiroi_active_test', JSON.stringify(testState));
+                window.location.href = 'test.html';
+            });
+        });
+    </script>
+</body>
+
+</html>
